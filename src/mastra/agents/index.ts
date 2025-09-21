@@ -1,2 +1,2 @@
-// Agents Mastra - À implémenter
-// TODO: Créer des agents compatibles avec l'API Mastra v0.17.1
+// Agents Mastra
+export * from './mistral.agent';

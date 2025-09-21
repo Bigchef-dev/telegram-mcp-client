@@ -27,6 +27,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
+    "@ai-sdk/mistral": "^2.0.14",
     "@mastra/core": "^0.17.1",
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",

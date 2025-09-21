@@ -3,9 +3,8 @@ export * from './commands/base/command.interface';
 export * from './commands/base/base-command.handler';
 export * from './commands/start.handler';
 export * from './commands/help.handler';
-export * from './commands/status.handler';
 export * from './commands/ping.handler';
-export * from './commands/mastra.handler';
+export * from './commands/mistral.handler';
 
 // Export all event handlers
 export * from './events/event.interface';

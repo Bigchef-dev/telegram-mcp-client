@@ -6,7 +6,6 @@ import {
   EventRegistry,
   StartCommandHandler,
   HelpCommandHandler,
-  StatusCommandHandler,
   PingCommandHandler,
   TextEventHandler,
   VoiceEventHandler,
@@ -25,7 +24,6 @@ export class TelegramService {
     private readonly eventRegistry: EventRegistry,
     private readonly startHandler: StartCommandHandler,
     private readonly helpHandler: HelpCommandHandler,
-    private readonly statusHandler: StatusCommandHandler,
     private readonly pingHandler: PingCommandHandler,
     private readonly textHandler: TextEventHandler,
     private readonly voiceHandler: VoiceEventHandler,
@@ -51,7 +49,6 @@ export class TelegramService {
     // Enregistrement des handlers de commandes
     this.commandRegistry.register(this.startHandler);
     this.commandRegistry.register(this.helpHandler);
-    this.commandRegistry.register(this.statusHandler);
     this.commandRegistry.register(this.pingHandler);
 
     // Enregistrement des handlers d'événements
