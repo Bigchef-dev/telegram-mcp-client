@@ -5,6 +5,7 @@ export * from './commands/start.handler';
 export * from './commands/help.handler';
 export * from './commands/status.handler';
 export * from './commands/ping.handler';
+export * from './commands/mastra.handler';
 
 // Export all event handlers
 export * from './events/event.interface';

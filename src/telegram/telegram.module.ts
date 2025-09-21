@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TelegramService } from './telegram.service';
+import { MastraModule } from '../mastra/mastra.module';
 import {
   CommandRegistry,
   EventRegistry,
@@ -7,6 +8,7 @@ import {
   HelpCommandHandler,
   StatusCommandHandler,
   PingCommandHandler,
+  MastraCommandHandler,
   TextEventHandler,
   VoiceEventHandler,
   UnsupportedMediaEventHandler,
@@ -14,6 +16,7 @@ import {
 } from './handlers';
 
 @Module({
+  imports: [MastraModule],
   providers: [
     TelegramService,
     CommandRegistry,
@@ -22,6 +25,7 @@ import {
     HelpCommandHandler,
     StatusCommandHandler,
     PingCommandHandler,
+    MastraCommandHandler,
     TextEventHandler,
     VoiceEventHandler,
     UnsupportedMediaEventHandler,

@@ -27,13 +27,15 @@
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
+    "@mastra/core": "^0.17.1",
     "@nestjs/common": "^11.1.6",
     "@nestjs/core": "^11.1.6",
     "@telegraf/types": "^9.0.0",
     "dotenv": "^17.2.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
-    "telegraf": "^4.16.3"
+    "telegraf": "^4.16.3",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.10",

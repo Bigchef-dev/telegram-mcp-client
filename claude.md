@@ -13,6 +13,12 @@ telegram-mcp-client/
 │   ├── app.module.ts           # Module principal NestJS
 │   ├── app.service.ts          # Service principal de l'application
 │   ├── main.ts                 # Point d'entrée (createApplicationContext)
+│   ├── mastra/                 # 🆕 Intégration Mastra
+│   │   ├── index.ts            # Configuration et MastraService
+│   │   ├── mastra.module.ts    # Module NestJS pour Mastra
+│   │   ├── agents/             # Agents IA (à développer)
+│   │   ├── tools/              # Outils personnalisés (à développer)
+│   │   └── workflows/          # Workflows (à développer)
 │   └── telegram/
 │       ├── telegram.module.ts  # Module Telegram
 │       ├── telegram.service.ts # Service bot Telegram avec Telegraf
@@ -25,7 +31,8 @@ telegram-mcp-client/
 │           │   ├── start.handler.ts    # Handler /start
 │           │   ├── help.handler.ts     # Handler /help
 │           │   ├── status.handler.ts   # Handler /status
-│           │   └── ping.handler.ts     # Handler /ping
+│           │   ├── ping.handler.ts     # Handler /ping
+│           │   └── mastra.handler.ts   # 🆕 Handler /mastra
 │           ├── events/         # Handlers d'événements
 │           │   ├── event.interface.ts          # Interface événements
 │           │   ├── base-event.handler.ts       # Classe de base
@@ -53,6 +60,11 @@ telegram-mcp-client/
 - NestJS 11.1.6 (sans serveur HTTP, utilise createApplicationContext)
 - TypeScript 5.9.2
 - Node.js avec pnpm
+
+**Intégration Mastra:** 🆕
+- @mastra/core 0.17.1 (framework modulaire pour IA)
+- Zod 3.25.76 (validation de schémas)
+- MastraService pour traitement intelligent des messages
 
 **Bot Telegram:**
 - Telegraf 4.16.3 (bibliothèque bot Telegram)
@@ -148,7 +160,8 @@ LOG_LEVEL=debug
 - `/help` - Aide (HelpCommandHandler)
 - `/status` - Statut du bot (StatusCommandHandler)
 - `/ping` - Test de connectivité (PingCommandHandler)
-- Gestion des messages texte génériques (MessageEventHandler)
+- `/mastra` - 🆕 Test de l'intégration Mastra (MastraCommandHandler)
+- Gestion des messages texte génériques avec Mastra (MessageEventHandler)
 - Gestion d'erreurs (ErrorEventHandler)
 
 ## Scripts disponibles
@@ -168,18 +181,29 @@ LOG_LEVEL=debug
 
 ## Prochaines étapes identifiées
 
-### Logging (demande actuelle)
+### Intégration Mastra (NOUVEAU) ✅
+- [x] Installation et configuration Mastra v0.17.1
+- [x] Structure de dossiers (agents, tools, workflows)
+- [x] MastraService pour traitement de messages
+- [x] Module NestJS et injection de dépendances
+- [x] Handler /mastra pour tests
+- [x] Intégration avec TextEventHandler
+- [ ] Configuration agents IA avec models (OpenAI, Anthropic)
+- [ ] Création d'outils personnalisés
+- [ ] Workflows pour cas d'usage complexes
+
+### Logging (demande précédente)
 - [ ] Remplacer Logger NestJS par Pino
 - [ ] Installer : `pino`, `nestjs-pino`, `pino-pretty`
 - [ ] Configurer Pino dans app.module.ts
 - [ ] Migrer les services vers injection Pino
 
 ### Fonctionnalités futures
-- [ ] Intégration MCP (Model Context Protocol)
-- [ ] Commandes avancées MCP via Telegram
+- [ ] Agents IA avancés avec Mastra
+- [ ] Commandes avancées MCP via Telegram + Mastra
 - [ ] Gestion des sessions utilisateur
 - [ ] Base de données pour la persistance
-- [ ] Tests d'intégration
+- [ ] Tests d'intégration avec Mastra
 
 ## Notes techniques importantes
 
