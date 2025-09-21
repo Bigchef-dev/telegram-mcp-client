@@ -8,7 +8,9 @@ import {
   HelpCommandHandler,
   StatusCommandHandler,
   PingCommandHandler,
-  MessageEventHandler,
+  TextEventHandler,
+  VoiceEventHandler,
+  UnsupportedMediaEventHandler,
   ErrorEventHandler,
   EventType
 } from './handlers';
@@ -25,7 +27,9 @@ export class TelegramService {
     private readonly helpHandler: HelpCommandHandler,
     private readonly statusHandler: StatusCommandHandler,
     private readonly pingHandler: PingCommandHandler,
-    private readonly messageHandler: MessageEventHandler,
+    private readonly textHandler: TextEventHandler,
+    private readonly voiceHandler: VoiceEventHandler,
+    private readonly unsupportedMediaHandler: UnsupportedMediaEventHandler,
     private readonly errorHandler: ErrorEventHandler
   ) {
     const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -51,7 +55,9 @@ export class TelegramService {
     this.commandRegistry.register(this.pingHandler);
 
     // Enregistrement des handlers d'événements
-    this.eventRegistry.register(this.messageHandler);
+    this.eventRegistry.register(this.textHandler);
+    this.eventRegistry.register(this.voiceHandler);
+    this.eventRegistry.register(this.unsupportedMediaHandler);
     this.eventRegistry.register(this.errorHandler);
 
     this.logger.log('All handlers initialized successfully');
@@ -108,19 +114,90 @@ export class TelegramService {
    * Configure tous les handlers d'événements
    */
   private setupEventHandlers(): void {
-    // Handler pour les messages texte (utilise les filter utils modernes)
-    const messageHandler = this.eventRegistry.getHandler(EventType.TEXT);
-    if (messageHandler) {
+    // Handler pour les messages texte (conversation acceptée)
+    const textHandler = this.eventRegistry.getHandler(EventType.TEXT);
+    if (textHandler) {
       this.bot.on(message('text'), async (ctx) => {
         // Éviter de traiter les commandes comme des messages
-        // Avec le filtre message('text'), ctx.message est garanti d'avoir une propriété text
         if (!ctx.message.text.startsWith('/')) {
-          await messageHandler.handle(ctx);
+          await textHandler.handle(ctx);
         }
       });
     }
 
-    this.logger.log('Configured event handlers');
+    // Handler pour les messages vocaux (conversation acceptée - futur)
+    const voiceHandler = this.eventRegistry.getHandler(EventType.VOICE);
+    if (voiceHandler) {
+      this.bot.on(message('voice'), async (ctx) => {
+        await voiceHandler.handle(ctx);
+      });
+    }
+
+    // Handlers pour tous les types de médias non supportés
+    const unsupportedHandler = this.eventRegistry.getHandler('unsupported_media');
+    if (unsupportedHandler) {
+      // Photos
+      this.bot.on(message('photo'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Audio
+      this.bot.on(message('audio'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Documents
+      this.bot.on(message('document'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Vidéos
+      this.bot.on(message('video'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Messages vidéo courts
+      this.bot.on(message('video_note'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Stickers
+      this.bot.on(message('sticker'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // GIF animés
+      this.bot.on(message('animation'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Contacts
+      this.bot.on(message('contact'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Géolocalisation
+      this.bot.on(message('location'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Lieux
+      this.bot.on(message('venue'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Sondages
+      this.bot.on(message('poll'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+
+      // Dés
+      this.bot.on(message('dice'), async (ctx) => {
+        await unsupportedHandler.handle(ctx);
+      });
+    }
+
+    this.logger.log('Configured event handlers for all message types');
   }
 
   async launch(): Promise<void> {

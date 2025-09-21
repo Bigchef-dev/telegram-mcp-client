@@ -7,7 +7,9 @@ import {
   HelpCommandHandler,
   StatusCommandHandler,
   PingCommandHandler,
-  MessageEventHandler,
+  TextEventHandler,
+  VoiceEventHandler,
+  UnsupportedMediaEventHandler,
   ErrorEventHandler
 } from './handlers';
 
@@ -20,7 +22,9 @@ import {
     HelpCommandHandler,
     StatusCommandHandler,
     PingCommandHandler,
-    MessageEventHandler,
+    TextEventHandler,
+    VoiceEventHandler,
+    UnsupportedMediaEventHandler,
     ErrorEventHandler
   ],
   exports: [TelegramService],
