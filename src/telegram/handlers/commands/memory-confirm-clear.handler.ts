@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
 import { MastraService } from '../../../mastra';
+import { UserMemoryService } from '@/memory/user-memory.service';
 
 /**
  * Handler pour la commande /confirm_clear - Confirme et effectue l'effacement de mémoire
@@ -15,7 +16,7 @@ export class ConfirmClearCommandHandler extends BaseCommandHandler {
     description: 'Confirme et effectue l\'effacement de votre historique de conversation',
   };
 
-  constructor(private readonly mastraService: MastraService) {
+  constructor(private readonly userMemory: UserMemoryService) {
     super();
   }
 
@@ -30,11 +31,9 @@ export class ConfirmClearCommandHandler extends BaseCommandHandler {
         return;
       }
 
-      // Tenter d'effacer la mémoire via MastraService
-      const clearResult = await this.mastraService.clearUserMemory(userId);
+      const clearResult = await this.userMemory.clearUserMemory(userId);
 
       if (clearResult) {
-        // Succès de l'effacement
         const successMessage = `✅ **Mémoire Effacée avec Succès**`;
 
         await ctx.reply(successMessage, { parse_mode: 'Markdown' });
@@ -42,7 +41,6 @@ export class ConfirmClearCommandHandler extends BaseCommandHandler {
         this.logger.log(`Memory successfully cleared for user ${userId} in chat ${chatId}`);
 
       } else {
-        // Échec de l'effacement
         const errorMessage = `❌ **Erreur lors de l'Effacement**
 
 🔧 **Problème:** Impossible d'effacer votre mémoire de conversation.

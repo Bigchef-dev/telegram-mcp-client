@@ -58,7 +58,7 @@ export class PollAgent extends Agent {
       // Créer un agent temporaire avec la mémoire de l'utilisateur
       const userAgent = new Agent({
         name: 'poll-user-agent',
-        description: 'Agent temporaire pour sondages avec mémoire utilisateur',
+        description: 'Assistant Telegram pour faire des sondages',
         instructions: this.instructions,
         model: mistral(PollAgent.MODEL_NAME),
         memory: userMemory,

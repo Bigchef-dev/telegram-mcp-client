@@ -33,7 +33,7 @@ export class UnsupportedMediaEventHandler extends BaseEventHandler {
       this.logger.log(`Received unsupported media type: ${mediaType} from user: ${ctx.from?.id}`);
       
       await ctx.reply(
-        `${this.getEmojiForType(mediaType)} ${this.mediaTypeMessages[mediaType as keyof typeof this.mediaTypeMessages] || 'Contenu reçu'} !\n\n` +
+        `${this.mediaTypeMessages[mediaType as keyof typeof this.mediaTypeMessages] || 'Contenu reçu'} !\n\n` +
         '❌ Ce type de contenu n\'est pas encore supporté pour les conversations MCP.\n\n' +
         '💬 Pour interagir avec le bot, veuillez utiliser :\n' +
         '• Messages texte 📝\n' +
@@ -63,24 +63,5 @@ export class UnsupportedMediaEventHandler extends BaseEventHandler {
     if (message.dice) return EventType.DICE;
     
     return 'unknown';
-  }
-
-  private getEmojiForType(mediaType?: string): string {
-    const emojiMap: { [key: string]: string } = {
-      [EventType.PHOTO]: '📷',
-      [EventType.AUDIO]: '🎵',
-      [EventType.DOCUMENT]: '📄',
-      [EventType.VIDEO]: '🎥',
-      [EventType.VIDEO_NOTE]: '📹',
-      [EventType.STICKER]: '🎭',
-      [EventType.ANIMATION]: '🎞️',
-      [EventType.CONTACT]: '👤',
-      [EventType.LOCATION]: '📍',
-      [EventType.VENUE]: '🏢',
-      [EventType.POLL]: '📊',
-      [EventType.DICE]: '🎲'
-    };
-    
-    return emojiMap[mediaType || ''] || '📎';
   }
 }

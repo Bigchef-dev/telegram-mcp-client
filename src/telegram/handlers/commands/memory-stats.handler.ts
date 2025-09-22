@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
 import { MastraService } from '../../../mastra';
+import { UserMemoryService } from '@/memory/user-memory.service';
 
 /**
  * Handler pour la commande /memory_stats - Affiche des statistiques détaillées sur la mémoire
@@ -15,7 +16,7 @@ export class MemoryStatsCommandHandler extends BaseCommandHandler {
     description: 'Affiche des statistiques détaillées sur votre mémoire de conversation',
   };
 
-  constructor(private readonly mastraService: MastraService) {
+  constructor(private readonly userMemory: UserMemoryService) {
     super();
   }
 
@@ -31,8 +32,8 @@ export class MemoryStatsCommandHandler extends BaseCommandHandler {
       }
 
       // Récupère les statistiques de mémoire via MastraService
-      const memoryStats = this.mastraService.getUserMemoryStats(userId);
-      const activeUsers = this.mastraService.getActiveUsersWithMemory();
+      const memoryStats = this.userMemory.getUserMemoryStats(userId);
+      const activeUsers = this.userMemory.getActiveUsers();
 
       // Formate les statistiques
       const statsMessage = `📊 **Statistiques de Mémoire Détaillées**

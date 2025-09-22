@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
 import { MastraService } from '../../../mastra';
+import { UserMemoryService } from '@/memory/user-memory.service';
 
 /**
  * Handler pour la commande /reset_memory - Réinitialisation complète de la mémoire
@@ -15,7 +16,7 @@ export class ResetMemoryCommandHandler extends BaseCommandHandler {
     description: 'Réinitialisation complète de votre mémoire de conversation (action immédiate)',
   };
 
-  constructor(private readonly mastraService: MastraService) {
+  constructor(private readonly userMemory: UserMemoryService) {
     super();
   }
 
@@ -34,11 +35,11 @@ export class ResetMemoryCommandHandler extends BaseCommandHandler {
       await ctx.reply('🔄 **Réinitialisation en cours...** Veuillez patienter.', { parse_mode: 'Markdown' });
 
       // Effectuer la réinitialisation complète
-      const resetResult = await this.mastraService.clearUserMemory(userId);
+      const resetResult = await this.userMemory.clearUserMemory(userId);
 
       if (resetResult) {
         // Récupérer les statistiques après reset pour confirmer
-        const statsAfterReset = this.mastraService.getUserMemoryStats(userId);
+        const statsAfterReset = this.userMemory.getUserMemoryStats(userId);
 
         const successMessage = `✅ **Réinitialisation Complète Réussie**`;
 

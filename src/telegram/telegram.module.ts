@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TelegramService } from './telegram.service';
 import { MastraModule } from '../mastra/mastra.module';
+import { MemoryModule } from '../memory/memory.module';
 import {
   CommandRegistry,
   EventRegistry,
@@ -20,7 +21,7 @@ import {
 } from './handlers';
 
 @Module({
-  imports: [MastraModule],
+  imports: [MastraModule, MemoryModule],
   providers: [
     TelegramService,
     CommandRegistry,

@@ -40,18 +40,11 @@ export class MastraService {
       });
 
       return {
-        response: `🤖 **Mistral AI Assistant (avec mémoire isolée)**\n\n${mistralResponse.response}`,
+        response: mistralResponse.response,
         metadata: {
           processedAt: new Date().toISOString(),
           userId: input.userId,
-          chatId: input.chatId,
-          mastraVersion: '0.17.1',
-          platform: 'telegram',
-          mistralMetadata: mistralResponse.metadata,
-          confidence: mistralResponse.confidence,
-          memoryIsolated: true, // Indiquer que la mémoire est isolée par utilisateur
-          threadId: `${input.userId}-${input.chatId}`, // ID du thread de mémoire
-          userDbFile: `memory_user_${input.userId}.db`, // Fichier DB dédié
+          chatId: input.chatId
         },
       };
     } catch (error) {
@@ -83,17 +76,6 @@ export class MastraService {
     }
   }
 
-  async getStatus(): Promise<{ status: string; timestamp: string; version: string; agents: string[]; activeUsers: number }> {
-    const activeUsers = this.userMemoryService.getActiveUsers();
-    return {
-      status: 'Mastra service is running with Mistral AI and isolated memory',
-      timestamp: new Date().toISOString(),
-      version: '0.17.1',
-      agents: ['MistralAgent', 'MistralAgentWithMemory'],
-      activeUsers: activeUsers.length,
-    };
-  }
-
   /**
    * Test de l'agent Mistral avec mémoire isolée
    */
@@ -114,26 +96,5 @@ export class MastraService {
         details: error.message,
       };
     }
-  }
-
-  /**
-   * Efface la mémoire d'un utilisateur
-   */
-  async clearUserMemory(userId: string): Promise<boolean> {
-    return await this.pollAgentWithMemory.clearUserMemory(userId);
-  }
-
-  /**
-   * Récupère les statistiques de mémoire d'un utilisateur
-   */
-  getUserMemoryStats(userId: string) {
-    return this.pollAgentWithMemory.getUserMemoryStats(userId);
-  }
-
-  /**
-   * Récupère la liste des utilisateurs avec mémoire active
-   */
-  getActiveUsersWithMemory(): string[] {
-    return this.userMemoryService.getActiveUsers();
   }
 }
