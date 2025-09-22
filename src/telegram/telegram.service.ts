@@ -7,6 +7,12 @@ import {
   StartCommandHandler,
   HelpCommandHandler,
   PingCommandHandler,
+  MistralCommandHandler,
+  MemoryCommandHandler,
+  MemoryStatsCommandHandler,
+  ClearMemoryCommandHandler,
+  ConfirmClearCommandHandler,
+  ResetMemoryCommandHandler,
   TextEventHandler,
   VoiceEventHandler,
   UnsupportedMediaEventHandler,
@@ -25,6 +31,12 @@ export class TelegramService {
     private readonly startHandler: StartCommandHandler,
     private readonly helpHandler: HelpCommandHandler,
     private readonly pingHandler: PingCommandHandler,
+    private readonly mistralHandler: MistralCommandHandler,
+    private readonly memoryHandler: MemoryCommandHandler,
+    private readonly memoryStatsHandler: MemoryStatsCommandHandler,
+    private readonly clearMemoryHandler: ClearMemoryCommandHandler,
+    private readonly confirmClearHandler: ConfirmClearCommandHandler,
+    private readonly resetMemoryHandler: ResetMemoryCommandHandler,
     private readonly textHandler: TextEventHandler,
     private readonly voiceHandler: VoiceEventHandler,
     private readonly unsupportedMediaHandler: UnsupportedMediaEventHandler,
@@ -50,6 +62,12 @@ export class TelegramService {
     this.commandRegistry.register(this.startHandler);
     this.commandRegistry.register(this.helpHandler);
     this.commandRegistry.register(this.pingHandler);
+    this.commandRegistry.register(this.mistralHandler);
+    this.commandRegistry.register(this.memoryHandler);
+    this.commandRegistry.register(this.memoryStatsHandler);
+    this.commandRegistry.register(this.clearMemoryHandler);
+    this.commandRegistry.register(this.confirmClearHandler);
+    this.commandRegistry.register(this.resetMemoryHandler);
 
     // Enregistrement des handlers d'événements
     this.eventRegistry.register(this.textHandler);
@@ -84,24 +102,9 @@ export class TelegramService {
     const commands = this.commandRegistry.getAllHandlers();
     
     commands.forEach((handler, commandName) => {
-      // Commande /start
-      if (commandName === 'start') {
-        this.bot.start(async (ctx: Context) => {
-          await handler.execute(ctx);
-        });
-      }
-      // Commande /help  
-      else if (commandName === 'help') {
-        this.bot.help(async (ctx: Context) => {
-          await handler.execute(ctx);
-        });
-      }
-      // Autres commandes
-      else {
         this.bot.command(commandName, async (ctx: Context) => {
           await handler.execute(ctx);
         });
-      }
     });
 
     this.logger.log(`Configured ${commands.size} command handlers`);

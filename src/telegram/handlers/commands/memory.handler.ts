@@ -39,8 +39,9 @@ export class MemoryCommandHandler extends BaseCommandHandler {
 
 🔧 **Commandes disponibles:**
 • \`/memory\` - Affiche ces informations
-• \`/clear_memory\` - Efface votre historique
-• \`/memory_stats\` - Statistiques détaillées
+• \`/memory-stats\` - Statistiques détaillées
+• \`/memory-clear\` - Efface votre historique
+• \`/memory-reset\` - Réinitialisation complète
 
 ℹ️ **Note:** Votre bot se souvient de vos conversations pour vous offrir des réponses plus pertinentes et contextuelles.
 
