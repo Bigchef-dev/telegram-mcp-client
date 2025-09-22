@@ -4,7 +4,6 @@ export * from './commands/base/base-command.handler';
 export * from './commands/start.handler';
 export * from './commands/help.handler';
 export * from './commands/ping.handler';
-export * from './commands/mistral.handler';
 export * from './commands/memory.handler';
 export * from './commands/memory-stats.handler';
 export * from './commands/memory-clear.handler';

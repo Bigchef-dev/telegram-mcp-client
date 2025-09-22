@@ -7,7 +7,6 @@ import {
   StartCommandHandler,
   HelpCommandHandler,
   PingCommandHandler,
-  MistralCommandHandler,
   MemoryCommandHandler,
   MemoryStatsCommandHandler,
   ClearMemoryCommandHandler,
@@ -32,7 +31,6 @@ export class TelegramService {
     private readonly startHandler: StartCommandHandler,
     private readonly helpHandler: HelpCommandHandler,
     private readonly pingHandler: PingCommandHandler,
-    private readonly mistralHandler: MistralCommandHandler,
     private readonly memoryHandler: MemoryCommandHandler,
     private readonly memoryStatsHandler: MemoryStatsCommandHandler,
     private readonly clearMemoryHandler: ClearMemoryCommandHandler,
@@ -63,7 +61,6 @@ export class TelegramService {
     this.commandRegistry.register(this.startHandler);
     this.commandRegistry.register(this.helpHandler);
     this.commandRegistry.register(this.pingHandler);
-    this.commandRegistry.register(this.mistralHandler);
     this.commandRegistry.register(this.memoryHandler);
     this.commandRegistry.register(this.memoryStatsHandler);
     this.commandRegistry.register(this.clearMemoryHandler);
