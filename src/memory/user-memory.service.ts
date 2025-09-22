@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
-
+import { memoryConfig } from '@/config';
 /**
- * Service de gestion de mémoire isolée par utilisateur
+ * User-isolated memory management service
  */
 @Injectable()
 export class UserMemoryService {
@@ -15,28 +15,26 @@ export class UserMemoryService {
   }
 
   /**
-   * Récupère ou crée une instance de mémoire pour un utilisateur spécifique
+   * Retrieves or creates a memory instance for a specific user
    */
   private getUserMemory(userId: string): Memory {
-    // Vérifier si l'instance existe déjà
+    // Check if instance already exists
     if (this.memoryInstances.has(userId)) {
       return this.memoryInstances.get(userId)!;
     }
 
-    // Créer une nouvelle instance avec une base de données dédiée
+    // New instance
     const userMemory = new Memory({
       storage: new LibSQLStore({ 
-        url: `file:memory_user_${userId}.db` // Base de données dédiée par utilisateur
+        url: this.getDatabaseFilePath(userId) 
       }),
       options: {
-        // Récupère les 5 derniers messages pour le contexte
-        lastMessages: 5,
-        // Active la mémoire de travail pour persister les infos utilisateur
-        workingMemory: { enabled: true }
+        lastMessages: memoryConfig.lastMessages,
+        workingMemory: { enabled: memoryConfig.workingMemory.enabled }
       }
     });
 
-    // Sauvegarder l'instance
+    // Save the instance
     this.memoryInstances.set(userId, userMemory);
     
     this.logger.log(`Created dedicated memory instance for user ${userId}`);
@@ -45,14 +43,14 @@ export class UserMemoryService {
   }
 
   /**
-   * Récupère l'instance de mémoire pour un utilisateur
+   * Retrieves the memory instance for a user
    */
   getMemoryForUser(userId: string): Memory {
     return this.getUserMemory(userId);
   }
 
   /**
-   * Efface la mémoire d'un utilisateur
+   * Clears a user's memory
    */
   async clearUserMemory(userId: string): Promise<boolean> {
     try {
@@ -62,7 +60,7 @@ export class UserMemoryService {
       }
 
       // Créer une nouvelle instance propre
-      const freshMemory = this.getUserMemory(userId);
+      this.getUserMemory(userId);
       
       this.logger.log(`Memory cleared for user ${userId}`);
       return true;
@@ -72,7 +70,7 @@ export class UserMemoryService {
     }
   }
 
-  async getDatabaseFilePath(userId: string): Promise<string> {
+  getDatabaseFilePath(userId: string): string {
     return `data/memory_user_${userId}.db`;
   }
 
@@ -86,7 +84,7 @@ export class UserMemoryService {
   } {
     return {
       hasMemory: this.memoryInstances.has(userId),
-      databaseFile: `memory_user_${userId}.db`,
+      databaseFile: this.getDatabaseFilePath(userId),
       isActive: this.memoryInstances.has(userId),
     };
   }

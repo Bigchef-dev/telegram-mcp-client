@@ -19,6 +19,7 @@ import {
   ErrorEventHandler,
   EventType
 } from './handlers';
+import { telegramConfig } from '@/config';
 
 @Injectable()
 export class TelegramService {
@@ -42,7 +43,7 @@ export class TelegramService {
     private readonly unsupportedMediaHandler: UnsupportedMediaEventHandler,
     private readonly errorHandler: ErrorEventHandler
   ) {
-    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const token = telegramConfig.bot.token;
     
     if (!token) {
       throw new Error('TELEGRAM_BOT_TOKEN must be provided in environment variables');
