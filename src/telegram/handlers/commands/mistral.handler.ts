@@ -23,7 +23,7 @@ export class MistralCommandHandler extends BaseCommandHandler {
       this.logger.log('Executing /mistral command');
 
       // Test direct de l'agent Mistral
-      const testResult = await this.mastraService.testMistralAgent('Bonjour, pouvez-vous me présenter Mistral AI ?');
+      const testResult = await this.mastraService.testMistralAgentWithMemory('Bonjour, pouvez-vous me présenter Mistral AI ?');
       
       const message = `🚀 **Test Agent Mistral AI**
 

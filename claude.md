@@ -161,6 +161,9 @@ LOG_LEVEL=debug
 - `/status` - Statut du bot (StatusCommandHandler)
 - `/ping` - Test de connectivité (PingCommandHandler)
 - `/mastra` - 🆕 Test de l'intégration Mastra (MastraCommandHandler)
+- `/memory` - 🆕 Informations sur la mémoire de conversation (MemoryCommandHandler)
+- `/clear_memory` - 🆕 Demande d'effacement de l'historique (ClearMemoryCommandHandler)
+- `/confirm_clear` - 🆕 Confirmation d'effacement (ConfirmClearCommandHandler)
 - Gestion des messages texte génériques avec Mastra (MessageEventHandler)
 - Gestion d'erreurs (ErrorEventHandler)
 
@@ -181,7 +184,16 @@ LOG_LEVEL=debug
 
 ## Prochaines étapes identifiées
 
-### Intégration Mastra (NOUVEAU) ✅
+### Système de Mémoire (NOUVEAU) ✅
+- [x] Installation et configuration @mastra/memory
+- [x] Intégration mémoire dans MistralAgent avec LibSQL
+- [x] Commandes de gestion mémoire (/memory, /clear_memory)
+- [x] Persistance automatique des conversations
+- [x] Documentation système de mémoire
+- [ ] Tests d'intégration mémoire
+- [ ] Optimisations et métriques
+
+### Intégration Mastra (EXISTANT) ✅
 - [x] Installation et configuration Mastra v0.17.1
 - [x] Structure de dossiers (agents, tools, workflows)
 - [x] MastraService pour traitement de messages

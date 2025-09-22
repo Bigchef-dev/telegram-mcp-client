@@ -1,5 +1,6 @@
 import { Mastra } from '@mastra/core';
-import { MistralAgent } from './agents/mistral.agent';
+import { PollAgent } from './agents/poll.agent';
+import { UserMemoryService } from '../memory/user-memory.service';
 
 // Configuration principale Mastra
 export const mastra = new Mastra({
@@ -8,12 +9,12 @@ export const mastra = new Mastra({
 
 // Services et utilitaires Mastra
 export class MastraService {
-  private mastra: Mastra;
-  private mistralAgent: MistralAgent;
+    private pollAgentWithMemory: PollAgent;
+  private userMemoryService: UserMemoryService;
 
   constructor() {
-    this.mastra = mastra;
-    this.mistralAgent = new MistralAgent();
+    this.userMemoryService = new UserMemoryService();
+    this.pollAgentWithMemory = new PollAgent(this.userMemoryService);
   }
 
   async processMessage(input: {
@@ -27,8 +28,8 @@ export class MastraService {
     metadata?: Record<string, any>;
   }> {
     try {
-      // Utiliser l'agent Mistral pour traiter le message
-      const mistralResponse = await this.mistralAgent.processUserMessage({
+      // Utiliser l'agent Mistral avec mémoire isolée pour traiter le message
+      const mistralResponse = await this.pollAgentWithMemory.processUserMessage({
         message: input.message,
         userId: input.userId,
         chatId: input.chatId,
@@ -39,8 +40,7 @@ export class MastraService {
       });
 
       return {
-        response: `🤖 **Mistral AI Assistant**\n\n${mistralResponse.response}`,
-        action: mistralResponse.shouldFollowUp ? 'typing' : 'reply',
+        response: `🤖 **Mistral AI Assistant (avec mémoire isolée)**\n\n${mistralResponse.response}`,
         metadata: {
           processedAt: new Date().toISOString(),
           userId: input.userId,
@@ -49,6 +49,9 @@ export class MastraService {
           platform: 'telegram',
           mistralMetadata: mistralResponse.metadata,
           confidence: mistralResponse.confidence,
+          memoryIsolated: true, // Indiquer que la mémoire est isolée par utilisateur
+          threadId: `${input.userId}-${input.chatId}`, // ID du thread de mémoire
+          userDbFile: `memory_user_${input.userId}.db`, // Fichier DB dédié
         },
       };
     } catch (error) {
@@ -65,7 +68,7 @@ export class MastraService {
 
 ⚠️ L'agent Mistral a rencontré un problème, réponse de fallback activée.
 
-✨ Mastra est intégré avec agent Mistral !`,
+✨ Mastra est intégré avec agent Mistral et mémoire persistante !`,
         action: 'reply',
         metadata: {
           processedAt: new Date().toISOString(),
@@ -74,28 +77,31 @@ export class MastraService {
           mastraVersion: '0.17.1',
           platform: 'telegram',
           error: 'Mistral agent error',
+          memoryEnabled: true,
         },
       };
     }
   }
 
-  async getStatus(): Promise<{ status: string; timestamp: string; version: string; agents: string[] }> {
+  async getStatus(): Promise<{ status: string; timestamp: string; version: string; agents: string[]; activeUsers: number }> {
+    const activeUsers = this.userMemoryService.getActiveUsers();
     return {
-      status: 'Mastra service is running with Mistral AI',
+      status: 'Mastra service is running with Mistral AI and isolated memory',
       timestamp: new Date().toISOString(),
       version: '0.17.1',
-      agents: ['MistralAgent'],
+      agents: ['MistralAgent', 'MistralAgentWithMemory'],
+      activeUsers: activeUsers.length,
     };
   }
 
   /**
-   * Test direct de l'agent Mistral
+   * Test de l'agent Mistral avec mémoire isolée
    */
-  async testMistralAgent(message: string): Promise<any> {
+  async testMistralAgentWithMemory(message: string, userId: string = 'test-user'): Promise<any> {
     try {
-      return await this.mistralAgent.processUserMessage({
+      return await this.pollAgentWithMemory.processUserMessage({
         message,
-        userId: 'test-user',
+        userId,
         chatId: 'test-chat',
         context: {
           messageType: 'text',
@@ -104,9 +110,30 @@ export class MastraService {
       });
     } catch (error) {
       return {
-        error: 'Test failed',
+        error: 'Memory test failed',
         details: error.message,
       };
     }
+  }
+
+  /**
+   * Efface la mémoire d'un utilisateur
+   */
+  async clearUserMemory(userId: string): Promise<boolean> {
+    return await this.pollAgentWithMemory.clearUserMemory(userId);
+  }
+
+  /**
+   * Récupère les statistiques de mémoire d'un utilisateur
+   */
+  getUserMemoryStats(userId: string) {
+    return this.pollAgentWithMemory.getUserMemoryStats(userId);
+  }
+
+  /**
+   * Récupère la liste des utilisateurs avec mémoire active
+   */
+  getActiveUsersWithMemory(): string[] {
+    return this.userMemoryService.getActiveUsers();
   }
 }
