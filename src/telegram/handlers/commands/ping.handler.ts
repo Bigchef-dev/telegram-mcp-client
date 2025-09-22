@@ -5,7 +5,7 @@ import { CommandMetadata } from './base/command.interface';
 
 @Injectable()
 export class PingCommandHandler extends BaseCommandHandler {
-  protected metadata: CommandMetadata = {
+  public readonly metadata: CommandMetadata = {
     name: 'ping',
     description: 'Teste la réactivité du bot'
   };

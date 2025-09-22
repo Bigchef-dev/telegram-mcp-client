@@ -6,7 +6,7 @@ import { CommandRegistry } from '../registry/command.registry';
 
 @Injectable()
 export class HelpCommandHandler extends BaseCommandHandler {
-  protected metadata: CommandMetadata = {
+  public readonly metadata: CommandMetadata = {
     name: 'help',
     description: 'Affiche la liste des commandes disponibles'
   };

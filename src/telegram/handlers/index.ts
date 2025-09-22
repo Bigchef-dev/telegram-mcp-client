@@ -7,9 +7,9 @@ export * from './commands/ping.handler';
 export * from './commands/mistral.handler';
 export * from './commands/memory.handler';
 export * from './commands/memory-stats.handler';
-export * from './commands/clear-memory.handler';
-export * from './commands/confirm-clear.handler';
-export * from './commands/reset-memory.handler';
+export * from './commands/memory-clear.handler';
+export * from './commands/memory-confirm-clear.handler';
+export * from './commands/memory-reset.handler';
 
 // Export all event handlers
 export * from './events/event.interface';

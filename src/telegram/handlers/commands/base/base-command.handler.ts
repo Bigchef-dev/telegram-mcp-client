@@ -12,7 +12,7 @@ export abstract class BaseCommandHandler implements ICommandHandler {
   /**
    * Métadonnées de la commande
    */
-  protected abstract metadata: CommandMetadata;
+  public readonly abstract metadata: CommandMetadata;
 
   /**
    * Retourne le nom de la commande

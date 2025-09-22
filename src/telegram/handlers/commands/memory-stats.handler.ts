@@ -10,8 +10,8 @@ import { MastraService } from '../../../mastra';
 @Injectable()
 export class MemoryStatsCommandHandler extends BaseCommandHandler {
 
-  protected metadata: CommandMetadata = {
-    name: 'memory-stats',
+  public readonly metadata: CommandMetadata = {
+    name: 'memory_stats',
     description: 'Affiche des statistiques détaillées sur votre mémoire de conversation',
   };
 
@@ -44,30 +44,14 @@ export class MemoryStatsCommandHandler extends BaseCommandHandler {
 
 💾 **Stockage:**
 • 📁 Fichier DB: \`${memoryStats?.databaseFile || 'N/A'}\`
-• � Mémoire active: ${memoryStats?.isActive ? '✅ Oui' : '❌ Non'}
-• � Mémoire configurée: ${memoryStats?.hasMemory ? '✅ Oui' : '❌ Non'}
+• 🧠 Mémoire active: ${memoryStats?.isActive ? '✅ Oui' : '❌ Non'}
+• 🧠 Mémoire configurée: ${memoryStats?.hasMemory ? '✅ Oui' : '❌ Non'}
 
 🌍 **Statistiques Globales:**
 • 👥 Utilisateurs actifs: ${activeUsers.length}
 • 🗄️ Système: Mastra Memory avec LibSQL
 • ⚡ Statut: ${memoryStats?.isActive ? 'Opérationnel' : 'Initialisation'}
-
-🔧 **Configuration:**
-• 📝 Historique conservé: 5 derniers messages
-• 🔍 Recherche sémantique: Activée
-• 📊 Portée de recherche: 10 derniers messages
-• 💾 Mémoire de travail: Activée
-
-📈 **Fonctionnalités:**
-• 🧠 Contexte conversationnel persistant
-• 🔍 Recherche sémantique intelligente
-• 💾 Stockage local sécurisé
-• 🔄 Isolation complète par utilisateur
-
-ℹ️ **Actions disponibles:**
-• \`/memory\` - Informations générales
-• \`/memory-clear\` - Effacer l'historique
-• \`/memory-reset\` - Réinitialisation complète`;
+`;
 
       await ctx.reply(statsMessage, { parse_mode: 'Markdown' });
 

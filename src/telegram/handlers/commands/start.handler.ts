@@ -5,7 +5,7 @@ import { CommandMetadata } from './base/command.interface';
 
 @Injectable()
 export class StartCommandHandler extends BaseCommandHandler {
-  protected metadata: CommandMetadata = {
+  public readonly metadata: CommandMetadata = {
     name: 'start',
     description: 'Démarre le bot et affiche le message de bienvenue'
   };

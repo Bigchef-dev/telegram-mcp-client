@@ -6,7 +6,7 @@ import { MastraService } from '../../../mastra';
 
 @Injectable()
 export class MistralCommandHandler extends BaseCommandHandler {
-  protected metadata: CommandMetadata = {
+  public readonly metadata: CommandMetadata = {
     name: 'mistral',
     description: 'Teste l\'agent Mistral AI directement',
   };

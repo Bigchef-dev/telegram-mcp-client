@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Context } from 'telegraf';
 import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
+import { memoryConfig } from '@/config';
+import { MemoryStatsCommandHandler } from './memory-stats.handler';
+import { ClearMemoryCommandHandler } from './memory-clear.handler';
 
 /**
  * Handler pour la commande /memory - Affiche des informations sur la mémoire de conversation
@@ -9,7 +12,11 @@ import { CommandMetadata } from './base/command.interface';
 @Injectable()
 export class MemoryCommandHandler extends BaseCommandHandler {
 
-  protected metadata: CommandMetadata = {
+  constructor(private readonly memoryStats: MemoryStatsCommandHandler, private readonly clearMemory: ClearMemoryCommandHandler) {
+    super();
+  }
+
+  public readonly metadata: CommandMetadata = {
     name: 'memory',
     description: 'Affiche des informations sur la mémoire de conversation',
   };
@@ -33,15 +40,8 @@ export class MemoryCommandHandler extends BaseCommandHandler {
 
 📊 **Fonctionnalités:**
 • ✅ Mémoire persistante activée
-• 🔍 Recherche sémantique (3 messages pertinents)
-• 📝 Historique des 5 derniers messages
-• 💾 Stockage local avec LibSQL
-
-🔧 **Commandes disponibles:**
-• \`/memory\` - Affiche ces informations
-• \`/memory-stats\` - Statistiques détaillées
-• \`/memory-clear\` - Efface votre historique
-• \`/memory-reset\` - Réinitialisation complète
+• 🔍 Recherche sémantique (${memoryConfig.semanticRecall.topK} messages pertinents)
+• 📝 Historique des ${memoryConfig.lastMessages} derniers messages
 
 ℹ️ **Note:** Votre bot se souvient de vos conversations pour vous offrir des réponses plus pertinentes et contextuelles.
 

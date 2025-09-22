@@ -10,8 +10,8 @@ import { MastraService } from '../../../mastra';
 @Injectable()
 export class ResetMemoryCommandHandler extends BaseCommandHandler {
 
-  protected metadata: CommandMetadata = {
-    name: 'memory-reset',
+  public readonly metadata: CommandMetadata = {
+    name: 'memory_reset',
     description: 'Réinitialisation complète de votre mémoire de conversation (action immédiate)',
   };
 
@@ -40,37 +40,7 @@ export class ResetMemoryCommandHandler extends BaseCommandHandler {
         // Récupérer les statistiques après reset pour confirmer
         const statsAfterReset = this.mastraService.getUserMemoryStats(userId);
 
-        const successMessage = `✅ **Réinitialisation Complète Réussie**
-
-🔄 **Action effectuée:** Réinitialisation complète de votre mémoire de conversation.
-
-📋 **Opérations réalisées:**
-• 🗑️ Effacement de l'historique complet
-• 🔧 Reconfiguration des paramètres de mémoire
-• 💾 Création d'une nouvelle base de données
-• ⚡ Réinitialisation des instances en mémoire
-
-📊 **État post-réinitialisation:**
-• 🆔 Thread ID: \`${userId}-${chatId}\`
-• 💾 Fichier DB: \`${statsAfterReset.databaseFile}\`
-• 🔋 Mémoire active: ${statsAfterReset.isActive ? '✅ Oui' : '❌ Non'}
-• 💡 Mémoire configurée: ${statsAfterReset.hasMemory ? '✅ Oui' : '❌ Non'}
-
-🚀 **Prêt pour:**
-• 💬 Nouvelles conversations sans historique
-• 🧠 Apprentissage contextuel from scratch
-• 🔍 Recherches sémantiques sur nouvelles données
-• 📊 Accumulation de nouveaux patterns
-
-💡 **Différences avec /memory-clear:**
-• ⚡ **Action immédiate** (pas de confirmation)
-• 🔧 **Reconfiguration complète** des instances
-• 💾 **Nettoyage forcé** des caches système
-• 🛠️ **Résolution** des problèmes de corruption
-
-🔍 **Commandes utiles:**
-• \`/memory-stats\` - Vérifier le nouvel état
-• \`/memory\` - Informations générales`;
+        const successMessage = `✅ **Réinitialisation Complète Réussie**`;
 
         await ctx.reply(successMessage, { parse_mode: 'Markdown' });
 

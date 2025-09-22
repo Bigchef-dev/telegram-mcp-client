@@ -54,12 +54,12 @@ export class UserMemoryService {
    */
   async clearUserMemory(userId: string): Promise<boolean> {
     try {
-      // Supprimer l'instance du cache
+      // Remove the instance from cache
       if (this.memoryInstances.has(userId)) {
         this.memoryInstances.delete(userId);
       }
 
-      // Créer une nouvelle instance propre
+      // Create a new clean instance
       this.getUserMemory(userId);
       
       this.logger.log(`Memory cleared for user ${userId}`);
@@ -71,11 +71,11 @@ export class UserMemoryService {
   }
 
   getDatabaseFilePath(userId: string): string {
-    return `data/memory_user_${userId}.db`;
+    return `file:data/memory_user_${userId}.db`;
   }
 
   /**
-   * Récupère les statistiques de mémoire pour un utilisateur
+   * Retrieves memory statistics for a user
    */
   getUserMemoryStats(userId: string): {
     hasMemory: boolean;
@@ -90,18 +90,18 @@ export class UserMemoryService {
   }
 
   /**
-   * Récupère la liste de tous les utilisateurs avec mémoire active
+   * Retrieves the list of all users with active memory
    */
   getActiveUsers(): string[] {
     return Array.from(this.memoryInstances.keys());
   }
 
   /**
-   * Nettoie les instances de mémoire inactives (optionnel, pour libérer la RAM)
+   * Cleans up inactive memory instances (optional, to free RAM)
    */
   cleanupInactiveMemories(): void {
-    // Cette méthode pourrait être appelée périodiquement
-    // pour libérer la mémoire des utilisateurs inactifs
+    // This method could be called periodically
+    // to free memory from inactive users
     this.logger.log(`Currently ${this.memoryInstances.size} user memory instances active`);
   }
 }

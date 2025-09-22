@@ -10,8 +10,8 @@ import { MastraService } from '../../../mastra';
 @Injectable()
 export class ConfirmClearCommandHandler extends BaseCommandHandler {
 
-  protected metadata: CommandMetadata = {
-    name: 'memory-confirm-clear',
+  public readonly metadata: CommandMetadata = {
+    name: 'memory_confirm_clear',
     description: 'Confirme et effectue l\'effacement de votre historique de conversation',
   };
 
@@ -35,27 +35,7 @@ export class ConfirmClearCommandHandler extends BaseCommandHandler {
 
       if (clearResult) {
         // Succès de l'effacement
-        const successMessage = `✅ **Mémoire Effacée avec Succès**
-
-🗑️ **Action réalisée:** Votre historique de conversation a été entièrement effacé.
-
-📋 **Ce qui a été supprimé:**
-• 💬 Tous les messages précédents
-• 🧠 Le contexte conversationnel
-• 📊 Les données de mémoire de travail
-• 🔍 L'historique des recherches sémantiques
-
-🔄 **État actuel:**
-• 🆕 Nouvelle session de conversation initialisée
-• 💾 Base de données utilisateur réinitialisée
-• ⚡ Mémoire prête pour de nouvelles interactions
-
-🚀 **Vous pouvez maintenant:**
-• 💬 Commencer une nouvelle conversation
-• 🔍 Le bot n'aura plus accès aux anciens messages
-• 📊 Utiliser \`/memory-stats\` pour vérifier l'état
-
-💡 **Note:** Cette action était irréversible et a été effectuée avec succès.`;
+        const successMessage = `✅ **Mémoire Effacée avec Succès**`;
 
         await ctx.reply(successMessage, { parse_mode: 'Markdown' });
 
@@ -87,16 +67,7 @@ export class ConfirmClearCommandHandler extends BaseCommandHandler {
     } catch (error) {
       this.logger.error('Error in confirm clear command:', error);
       
-      const systemErrorMessage = `❌ **Erreur Système**
-
-🔥 **Problème technique:** Une erreur inattendue s'est produite lors de l'effacement.
-
-🔧 **Recommandations:**
-• 🔄 Réessayez la commande \`/clear_memory\` puis \`/confirm_clear\`
-• 📊 Vérifiez l'état avec \`/memory-stats\`
-• 📞 Signalez ce problème à l'administrateur
-
-💡 **Code d'erreur:** CONFIRM_CLEAR_FAILED`;
+      const systemErrorMessage = `❌ **Erreur Système**`;
 
       await ctx.reply(systemErrorMessage, { parse_mode: 'Markdown' });
     }

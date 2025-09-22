@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Context } from 'telegraf';
 import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
+import { ConfirmClearCommandHandler } from './memory-confirm-clear.handler';
 
 /**
  * Handler pour la commande /clear_memory - Demande de confirmation pour effacer l'historique
@@ -9,8 +10,12 @@ import { CommandMetadata } from './base/command.interface';
 @Injectable()
 export class ClearMemoryCommandHandler extends BaseCommandHandler {
 
-  protected metadata: CommandMetadata = {
-    name: 'memory-clear',
+    constructor(private readonly confirmClearCommandHandler: ConfirmClearCommandHandler) {
+        super();
+    }
+    
+  public readonly metadata: CommandMetadata = {
+    name: 'memory_clear',
     description: 'Demande de confirmation pour effacer votre historique de conversation',
   };
 
@@ -36,19 +41,11 @@ export class ClearMemoryCommandHandler extends BaseCommandHandler {
 • 📊 Les données de mémoire de travail
 • 🔍 L'historique des recherches sémantiques
 
-🛡️ **Ce qui sera conservé:**
-• 🆔 Votre identifiant utilisateur
-• ⚙️ Les paramètres de configuration
-• 🔧 Les fonctionnalités du bot
-
 ⚠️ **Attention:** Cette action est **IRRÉVERSIBLE**. Une fois confirmée, vous ne pourrez plus récupérer vos conversations précédentes.
 
-🔄 **Pour confirmer l'effacement, tapez:**
-\`/memory-confirm-clear\`
+🔄 **Pour confirmer l'effacement, tapez:** \`/${this.confirmClearCommandHandler.metadata.name}\`
 
-❌ **Pour annuler, ignorez simplement ce message ou utilisez une autre commande.**
-
-💡 **Alternative:** Utilisez \`/memory-reset\` pour une réinitialisation complète incluant la reconfiguration.`;
+❌ **Pour annuler, ignorez simplement ce message ou utilisez une autre commande.**`;
 
       await ctx.reply(confirmationMessage, { parse_mode: 'Markdown' });
 
