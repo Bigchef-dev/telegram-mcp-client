@@ -5,6 +5,7 @@ import { MemoryModule } from '../memory/memory.module';
 @Module({
   imports: [MemoryModule],
   providers: [
+    MastraService,
     {
       provide: 'MASTRA_SERVICE',
       useFactory: () => {
@@ -12,6 +13,6 @@ import { MemoryModule } from '../memory/memory.module';
       },
     },
   ],
-  exports: ['MASTRA_SERVICE'],
+  exports: [MastraService, 'MASTRA_SERVICE'],
 })
 export class MastraModule {}
