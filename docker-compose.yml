@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: telegram-mcp-client
+    image: 'bigchef/telegram-mcp-poll'
     restart: unless-stopped
     environment:
       # Telegram Bot Configuration
@@ -52,8 +53,6 @@ services:
       - MCP_SERVER_URL=http://telegram-mcp-server:3001/mcp/
     volumes:
       - ./data:/app/data
-    ports: 
-      - "3001:3001"
     restart: unless-stopped
 
 volumes:
