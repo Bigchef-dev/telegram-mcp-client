@@ -1,0 +1,61 @@
+services:
+  telegram-mcp-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: telegram-mcp-client
+    restart: unless-stopped
+    environment:
+      # Telegram Bot Configuration
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      
+      # Mistral AI Configuration
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      
+      # MCP Configuration
+      - MCP_SERVER_URL=http://telegram-mcp-server:3001/mcp/
+      
+      # Node Environment
+      - NODE_ENV=production
+      
+      # Database Configuration (SQLite paths)
+      - DB_PATH=/app/data
+      
+    volumes:
+      # Persist SQLite database files
+      - telegram_data:/app/data
+      
+      # Optional: Mount config files if you need to override them
+      # - ./config:/app/config
+      
+    depends_on:
+      - telegram-mcp-server
+      
+    # Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # MCP Server (assuming you have one running on port 3001)
+  telegram-mcp-server:
+    image: bigchef/telegram-mcp-server:latest
+    container_name: telegram-mcp-server
+    environment:
+      - MCP_MODE=http
+      - PORT=3001
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - MCP_SERVER_URL=http://telegram-mcp-server:3001/mcp/
+    volumes:
+      - ./data:/app/data
+    ports: 
+      - "3001:3001"
+    restart: unless-stopped
+
+volumes:
+  telegram_data:
+    driver: local

@@ -1,3 +1,4 @@
+import { appConfig } from "@/config";
 import { MCPClient } from "@mastra/mcp";
 import { Injectable } from "@nestjs/common";
  
@@ -8,7 +9,7 @@ export class MCPTelegramClient extends MCPClient {
       id: "telegram-mcp-client",
       servers: {
         telegram: {
-          url: new URL("http://localhost:3001/mcp/"),
+          url: new URL(appConfig.mcp.telegramUrl),
         },
       },
     });

@@ -33,7 +33,7 @@ export class TextEventHandler extends BaseEventHandler {
       this.logger.log(`Mastra processed message: ${result}`);
       
       // Envoi de la réponse
-      await ctx.reply(result.text);
+      await ctx.reply(result.text, { parse_mode: 'Markdown' });
       
       // Action supplémentaire si nécessaire
       if (result.action === 'typing') {

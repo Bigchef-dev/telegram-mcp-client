@@ -33,13 +33,14 @@ export class VoiceEventHandler extends BaseEventHandler {
       const response = await fetch(file.href);
       const buffer = Buffer.from(await response.arrayBuffer());
 
-      await this.voiceProcessingWorkflow.execute({
+      const result = await this.voiceProcessingWorkflow.execute({
         voiceFileId: voice.file_id,
         mediaType: voice.mime_type,
         audio: buffer,
         userId: ctx.from?.id?.toString() || 'unknown',
         chatId: ctx.chat?.id?.toString() || 'unknown',
       })
+      await ctx.reply(result.text, { parse_mode: 'Markdown' });
     } catch (error) {
       await this.handleError(ctx, error as Error);
     }
