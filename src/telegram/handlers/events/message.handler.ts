@@ -1,14 +1,13 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Context } from 'telegraf';
 import { BaseEventHandler } from './base-event.handler';
 import { EventType } from './event.interface';
-import { MastraService } from '../../../mastra';
+import { MessageProcessingWorkflow } from '@/mastra/workflows/message-processing.workflow';
 
 @Injectable()
 export class TextEventHandler extends BaseEventHandler {
   constructor(
-    @Inject('MASTRA_SERVICE')
-    private readonly mastraService: MastraService,
+    private readonly messageProcessingWorkflow: MessageProcessingWorkflow,
   ) {
     super();
   }
@@ -24,19 +23,17 @@ export class TextEventHandler extends BaseEventHandler {
       const chatId = ctx.chat?.id?.toString() || '';
 
       this.logger.log(`Received text message from user ${userId}: ${message}`);
-      
-      // Traitement du message avec Mastra
-      const result = await this.mastraService.processMessage({
+
+      const result = await this.messageProcessingWorkflow.execute({
         message,
         userId,
         chatId,
-        messageType: 'text',
       });
 
-      this.logger.log(`Mastra processed message: ${JSON.stringify(result.metadata)}`);
+      this.logger.log(`Mastra processed message: ${result}`);
       
       // Envoi de la réponse
-      await ctx.reply(result.response);
+      await ctx.reply(result.text);
       
       // Action supplémentaire si nécessaire
       if (result.action === 'typing') {

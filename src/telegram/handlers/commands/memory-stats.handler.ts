@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Context } from 'telegraf';
 import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
-import { MastraService } from '../../../mastra';
 import { UserMemoryService } from '@/memory/user-memory.service';
 
 /**
@@ -33,7 +32,7 @@ export class MemoryStatsCommandHandler extends BaseCommandHandler {
 
       // Récupère les statistiques de mémoire via MastraService
       const memoryStats = this.userMemory.getUserMemoryStats(userId);
-      const activeUsers = this.userMemory.getActiveUsers();
+      const activeUsers = this.userMemory.getActiveMemoryAgents();
 
       // Formate les statistiques
       const statsMessage = `📊 **Statistiques de Mémoire Détaillées**

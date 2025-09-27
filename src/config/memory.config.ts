@@ -3,7 +3,7 @@
  */
 export const memoryConfig = {
     // Historique des messages
-    lastMessages: parseInt(process.env.MEMORY_LAST_MESSAGES || '5'),
+    lastMessages: parseInt(process.env.MEMORY_LAST_MESSAGES || '8'),
     
     // Recherche sémantique
     semanticRecall: {
@@ -17,7 +17,7 @@ export const memoryConfig = {
     workingMemory: {
       enabled: process.env.MEMORY_WORKING_MEMORY === 'true' || true,
       maxSize: parseInt(process.env.MEMORY_WORKING_MAX_SIZE || '1000'),
-      ttl: parseInt(process.env.MEMORY_WORKING_TTL || '86400000'), // 24h
+      ttl: parseInt(process.env.MEMORY_WORKING_TTL || '57600000'), // 16h
     },
 
   // Configuration de performance

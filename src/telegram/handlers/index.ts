@@ -6,9 +6,6 @@ export * from './commands/help.handler';
 export * from './commands/ping.handler';
 export * from './commands/memory.handler';
 export * from './commands/memory-stats.handler';
-export * from './commands/memory-clear.handler';
-export * from './commands/memory-confirm-clear.handler';
-export * from './commands/memory-reset.handler';
 
 // Export all event handlers
 export * from './events/event.interface';

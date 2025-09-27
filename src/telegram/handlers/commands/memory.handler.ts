@@ -4,7 +4,6 @@ import { BaseCommandHandler } from './base/base-command.handler';
 import { CommandMetadata } from './base/command.interface';
 import { memoryConfig } from '@/config';
 import { MemoryStatsCommandHandler } from './memory-stats.handler';
-import { ClearMemoryCommandHandler } from './memory-clear.handler';
 
 /**
  * Handler pour la commande /memory - Affiche des informations sur la mémoire de conversation
@@ -12,7 +11,7 @@ import { ClearMemoryCommandHandler } from './memory-clear.handler';
 @Injectable()
 export class MemoryCommandHandler extends BaseCommandHandler {
 
-  constructor(private readonly memoryStats: MemoryStatsCommandHandler, private readonly clearMemory: ClearMemoryCommandHandler) {
+  constructor() {
     super();
   }
 

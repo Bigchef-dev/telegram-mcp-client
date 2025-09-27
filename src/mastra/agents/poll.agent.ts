@@ -3,19 +3,23 @@ import { mistral } from '@ai-sdk/mistral';
 import { z } from 'zod';
 import { UserMemoryService } from '../../memory/user-memory.service';
 import { POLL_PROMPT } from './poll.prompt';
+import { Injectable } from '@nestjs/common';
+import { MCPTelegramClient } from '../mcp.client';
 
 /**
  * Poll Agent avec mémoire isolée par utilisateur
  */
-export class PollAgent extends Agent {
+@Injectable()
+export class PollAgent  {
   private static MODEL_NAME = 'mistral-small-latest';
+  private readonly agent: Agent;
 
-  constructor(private userMemoryService: UserMemoryService) {
-    super({
+  constructor(private userMemoryService: UserMemoryService, private readonly mcpClient: MCPTelegramClient) {
+    this.agent = new Agent({
       name: 'poll-telegram-assistant',
       description: 'Assistant Telegram pour sondages et enquêtes avec mémoire isolée par utilisateur',
-      instructions:  POLL_PROMPT,
-
+      instructions: POLL_PROMPT,
+      memory: this.userMemoryService.getMemory('poll-telegram-assistant'),
       model: mistral(PollAgent.MODEL_NAME),
       tools: {},
     });
@@ -48,73 +52,25 @@ export class PollAgent extends Agent {
   /**
    * Traite un message utilisateur avec l'agent Poll et mémoire isolée
    */
-  async processUserMessage(input: z.infer<typeof this.inputSchema>): Promise<z.infer<typeof this.outputSchema>> {
-    const startTime = Date.now();
-
-    try {
-      // Récupérer la mémoire dédiée à cet utilisateur
-      const userMemory = this.userMemoryService.getMemoryForUser(input.userId);
-
-      // Créer un agent temporaire avec la mémoire de l'utilisateur
-      const userAgent = new Agent({
-        name: 'poll-user-agent',
-        description: 'Assistant Telegram pour faire des sondages',
-        instructions: this.instructions,
-        model: mistral(PollAgent.MODEL_NAME),
-        memory: userMemory,
-        tools: {},
-      });
-
-      // Utilise l'agent temporaire avec la mémoire de l'utilisateur
-      const result = await userAgent.generateVNext(
-        input.message,
+  async processUserMessage(input: z.infer<typeof this.inputSchema>) : Promise<any> {  
+    // Utilise l'agent temporaire avec la mémoire de l'utilisateur
+    
+    const { message, userId, chatId } = input;
+    
+    const result = await this.agent.generateVNext(
+        [{role: 'system', content: `chat_id: ${chatId}`},{
+          role: 'user',
+          content: message,
+        }],
         {
           // Configuration de la mémoire pour cette conversation
           memory: {
-            thread: `${input.userId}-${input.chatId}`, // ID unique du thread de conversation
-            resource: input.userId, // Ressource utilisateur pour la mémoire de travail
-          }
+            thread: `${chatId}`, // ID unique du thread de conversation
+            resource: userId, // Ressource utilisateur pour la mémoire de travail
+          },
+          toolsets: await this.mcpClient.getToolsets()
         }
       );
-      
-      const processingTime = Date.now() - startTime;
-         
-      return {
-        response: result.text || 'Désolé, je n\'ai pas pu générer de réponse.',
-        confidence: 0.85,
-        metadata: {
-          model: PollAgent.MODEL_NAME,
-          tokensUsed: result.usage?.totalTokens,
-          processingTime,
-          memoryUsed: true,
-        },
-      };
-    } catch (error) {
-      console.error('Erreur lors du traitement avec Poll Agent et mémoire:', error);
-      
-      return {
-        response: 'Désolé, je rencontre un problème technique. Pouvez-vous reformuler votre question ?',
-        confidence: 0,
-        metadata: {
-          model: PollAgent.MODEL_NAME,
-          processingTime: Date.now() - startTime,
-          memoryUsed: false,
-        },
-      };
-    }
-  }
-
-  /**
-   * Efface la mémoire d'un utilisateur
-   */
-  async clearUserMemory(userId: string): Promise<boolean> {
-    return await this.userMemoryService.clearUserMemory(userId);
-  }
-
-  /**
-   * Récupère les statistiques de mémoire d'un utilisateur
-   */
-  getUserMemoryStats(userId: string) {
-    return this.userMemoryService.getUserMemoryStats(userId);
+      return result;
   }
 }

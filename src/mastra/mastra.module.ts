@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
-import { MastraService } from '../mastra';
 import { MemoryModule } from '../memory/memory.module';
+
+import workflows from './workflows';
+import agents from './agents';
+import { MCPTelegramClient } from './mcp.client';
 
 @Module({
   imports: [MemoryModule],
   providers: [
-    MastraService,
-    {
-      provide: 'MASTRA_SERVICE',
-      useFactory: () => {
-        return new MastraService();
-      },
-    },
+    MCPTelegramClient,
+    ...workflows,
+    ...agents
   ],
-  exports: [MastraService, 'MASTRA_SERVICE'],
+  exports: [
+        ...workflows
+  ],
 })
 export class MastraModule {}

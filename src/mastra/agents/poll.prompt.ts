@@ -45,6 +45,4 @@ Exemple 2 :
 5. **Fonctionnalités supplémentaires :**
    * Emojis diversifiés et automatiquement adaptés.
    * Format adapté au type de sondage (choix unique ou multiple).
-   * Lisibilité maximale pour les participants.
-
-Identifiant du chat : -1002093877046`;
+   * Lisibilité maximale pour les participants.`;

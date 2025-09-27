@@ -45,54 +45,54 @@ export class UserMemoryService {
   /**
    * Retrieves the memory instance for a user
    */
-  getMemoryForUser(userId: string): Memory {
-    return this.getUserMemory(userId);
+  getMemory(agentName: string): Memory {
+    return this.getUserMemory(agentName);
   }
 
   /**
    * Clears a user's memory
    */
-  async clearUserMemory(userId: string): Promise<boolean> {
+  async clearMemory(agentName: string): Promise<boolean> {
     try {
       // Remove the instance from cache
-      if (this.memoryInstances.has(userId)) {
-        this.memoryInstances.delete(userId);
+      if (this.memoryInstances.has(agentName)) {
+        this.memoryInstances.delete(agentName);
       }
 
       // Create a new clean instance
-      this.getUserMemory(userId);
-      
-      this.logger.log(`Memory cleared for user ${userId}`);
+      this.getUserMemory(agentName);
+
+      this.logger.log(`Memory cleared for user ${agentName}`);
       return true;
     } catch (error) {
-      this.logger.error(`Failed to clear memory for user ${userId}:`, error);
+      this.logger.error(`Failed to clear memory for user ${agentName}:`, error);
       return false;
     }
   }
 
-  getDatabaseFilePath(userId: string): string {
-    return `file:data/memory_user_${userId}.db`;
+  getDatabaseFilePath(agentName: string): string {
+    return `file:data/${agentName}.db`;
   }
 
   /**
    * Retrieves memory statistics for a user
    */
-  getUserMemoryStats(userId: string): {
+  getUserMemoryStats(agentName: string): {
     hasMemory: boolean;
     databaseFile: string;
     isActive: boolean;
   } {
     return {
-      hasMemory: this.memoryInstances.has(userId),
-      databaseFile: this.getDatabaseFilePath(userId),
-      isActive: this.memoryInstances.has(userId),
+      hasMemory: this.memoryInstances.has(agentName),
+      databaseFile: this.getDatabaseFilePath(agentName),
+      isActive: this.memoryInstances.has(agentName),
     };
   }
 
   /**
    * Retrieves the list of all users with active memory
    */
-  getActiveUsers(): string[] {
+  getActiveMemoryAgents(): string[] {
     return Array.from(this.memoryInstances.keys());
   }
 

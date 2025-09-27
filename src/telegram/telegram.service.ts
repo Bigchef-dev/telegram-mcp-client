@@ -9,9 +9,6 @@ import {
   PingCommandHandler,
   MemoryCommandHandler,
   MemoryStatsCommandHandler,
-  ClearMemoryCommandHandler,
-  ConfirmClearCommandHandler,
-  ResetMemoryCommandHandler,
   TextEventHandler,
   VoiceEventHandler,
   UnsupportedMediaEventHandler,
@@ -33,9 +30,6 @@ export class TelegramService {
     private readonly pingHandler: PingCommandHandler,
     private readonly memoryHandler: MemoryCommandHandler,
     private readonly memoryStatsHandler: MemoryStatsCommandHandler,
-    private readonly clearMemoryHandler: ClearMemoryCommandHandler,
-    private readonly confirmClearHandler: ConfirmClearCommandHandler,
-    private readonly resetMemoryHandler: ResetMemoryCommandHandler,
     private readonly textHandler: TextEventHandler,
     private readonly voiceHandler: VoiceEventHandler,
     private readonly unsupportedMediaHandler: UnsupportedMediaEventHandler,
@@ -63,9 +57,6 @@ export class TelegramService {
     this.commandRegistry.register(this.pingHandler);
     this.commandRegistry.register(this.memoryHandler);
     this.commandRegistry.register(this.memoryStatsHandler);
-    this.commandRegistry.register(this.clearMemoryHandler);
-    this.commandRegistry.register(this.confirmClearHandler);
-    this.commandRegistry.register(this.resetMemoryHandler);
 
     // Enregistrement des handlers d'événements
     this.eventRegistry.register(this.textHandler);
