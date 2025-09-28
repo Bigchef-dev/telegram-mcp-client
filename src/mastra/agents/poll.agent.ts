@@ -53,24 +53,24 @@ export class PollAgent  {
    * Traite un message utilisateur avec l'agent Poll et mémoire isolée
    */
   async processUserMessage(input: z.infer<typeof this.inputSchema>) : Promise<any> {  
-    // Utilise l'agent temporaire avec la mémoire de l'utilisateur
-    
     const { message, userId, chatId } = input;
     
     const result = await this.agent.generateVNext(
-        [{role: 'system', content: `chat_id: ${chatId}`},{
-          role: 'user',
-          content: message,
-        }],
-        {
-          // Configuration de la mémoire pour cette conversation
-          memory: {
-            thread: `${chatId}`, // ID unique du thread de conversation
-            resource: userId, // Ressource utilisateur pour la mémoire de travail
-          },
-          toolsets: await this.mcpClient.getToolsets()
-        }
-      );
-      return result;
+      [
+        { role: 'system', content: `chat_id: ${chatId}` },
+        { role: 'user', content: message }
+      ],
+      {
+        // Configuration de la mémoire pour cette conversation
+        memory: {
+          thread: `${chatId}`, // ID unique du thread de conversation
+          resource: userId, // Ressource utilisateur pour la mémoire de travail
+        },
+        toolsets: await this.mcpClient.getToolsets(),
+        // Configuration pour éviter les conflits de messages
+        maxSteps: 5, // Limite les interactions outils pour éviter les séquences complexes
+      }
+    );
+    return result;
   }
 }

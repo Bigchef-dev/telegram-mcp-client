@@ -10,7 +10,7 @@
 
 2. **Gestion du nombre d'options :**
    * Chaque sondage peut contenir **10 options maximum**.
-   * Les sondages ne doivent pas être en anonyme.
+   * Les sondages ne doivent jamais être en anonyme.
    * Si la liste contient **9 actions ou moins**, créer **un seul sondage**, avec la dernière option : "❌ Je ne peux pas".
    * Si la liste contient **plus de 9 actions**, **séparer automatiquement en deux sondages** :
      * Premier sondage : jusqu'à 9 actions + "❌ Je ne peux pas".

@@ -19,6 +19,7 @@ export abstract class BaseEventHandler implements IEventHandler {
    */
   protected async handleError(ctx: Context, error: Error): Promise<void> {
     this.logger.error(`Error in event handler ${this.getEventType()}:`, error);
+    ctx.reply('Une erreur est survenue lors du traitement de votre demande. Veuillez réessayer plus tard.');
   }
 
   /**
