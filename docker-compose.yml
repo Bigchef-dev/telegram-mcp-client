@@ -50,11 +50,11 @@ services:
       - MCP_MODE=http
       - PORT=3001
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - MCP_SERVER_URL=http://telegram-mcp-server:3001/mcp/
     volumes:
       - ./data:/app/data
     restart: unless-stopped
-
+    ports:
+      - "3001:3001"
 volumes:
   telegram_data:
     driver: local

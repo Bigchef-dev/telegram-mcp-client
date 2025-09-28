@@ -1,6 +1,9 @@
 /**
  * Configuration principale de l'application
  */
+import { config } from 'dotenv';
+config();
+
 export const appConfig = {
   // Configuration de l'environnement
   environment: process.env.NODE_ENV || 'development',
