@@ -12,6 +12,7 @@ export * from './events/event.interface';
 export * from './events/base-event.handler';
 export * from './events/message.handler';
 export * from './events/voice.handler';
+export * from './events/poll.handler';
 export * from './events/unsupported-media.handler';
 export * from './events/error.handler';
 

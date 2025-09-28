@@ -34,7 +34,7 @@ export class UnsupportedMediaEventHandler extends BaseEventHandler {
       
       await ctx.reply(
         `${this.mediaTypeMessages[mediaType as keyof typeof this.mediaTypeMessages] || 'Contenu reçu'} !\n\n` +
-        '❌ Ce type de contenu n\'est pas encore supporté pour les conversations MCP.\n\n' +
+        '❌ Ce type de contenu n\'est pas encore supporté.\n\n' +
         '💬 Pour interagir avec le bot, veuillez utiliser :\n' +
         '• Messages texte 📝\n' +
         '• Messages vocaux 🎙️ (bientôt supportés)\n\n' +

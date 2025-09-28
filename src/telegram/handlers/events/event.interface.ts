@@ -46,7 +46,7 @@ export enum EventType {
 /**
  * Types de messages acceptés pour la conversation MCP
  */
-export const CONVERSATION_TYPES = [EventType.TEXT, EventType.VOICE] as const;
+export const CONVERSATION_TYPES = [EventType.TEXT, EventType.VOICE, EventType.POLL] as const;
 
 /**
  * Types de messages non supportés pour la conversation
@@ -62,6 +62,5 @@ export const UNSUPPORTED_MEDIA_TYPES = [
   EventType.CONTACT,
   EventType.LOCATION,
   EventType.VENUE,
-  EventType.POLL,
   EventType.DICE
 ] as const;

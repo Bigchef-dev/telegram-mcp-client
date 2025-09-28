@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TelegramService } from './telegram.service';
+import { TelegramReplyService } from './services/telegram-reply.service';
 import { MemoryModule } from '../memory/memory.module';
 import {
   CommandRegistry,
@@ -11,6 +12,7 @@ import {
   MemoryStatsCommandHandler,
   TextEventHandler,
   VoiceEventHandler,
+  PollEventHandler,
   UnsupportedMediaEventHandler,
   ErrorEventHandler
 } from './handlers';
@@ -21,15 +23,17 @@ import { MastraModule } from '@/mastra/mastra.module';
   imports: [MemoryModule, MastraModule],
   providers: [
     TelegramService,
+    TelegramReplyService,
     CommandRegistry,
     EventRegistry,
     StartCommandHandler,
-    HelpCommandHandler,
+    HelpCommandHandler, 
     PingCommandHandler,
     MemoryCommandHandler,
     MemoryStatsCommandHandler,
     TextEventHandler,
     VoiceEventHandler,
+    PollEventHandler,
     UnsupportedMediaEventHandler,
     ErrorEventHandler,
     VoiceProcessingWorkflow,

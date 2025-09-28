@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { BaseEventHandler } from './base-event.handler';
 import { EventType } from './event.interface';
 import { VoiceProcessingWorkflow } from '@/mastra/workflows/voice-processing.workflow';
+import { TelegramReplyService } from '@/telegram/services/telegram-reply.service';
 
 @Injectable()
 export class VoiceEventHandler extends BaseEventHandler {
@@ -11,7 +12,8 @@ export class VoiceEventHandler extends BaseEventHandler {
   }
 
     constructor(
-      private readonly voiceProcessingWorkflow: VoiceProcessingWorkflow
+      private readonly voiceProcessingWorkflow: VoiceProcessingWorkflow,
+      private readonly telegramReplyService: TelegramReplyService,
     ) {
       super();
     }
@@ -40,7 +42,7 @@ export class VoiceEventHandler extends BaseEventHandler {
         userId: ctx.from?.id?.toString() || 'unknown',
         chatId: ctx.chat?.id?.toString() || 'unknown',
       })
-      await ctx.reply(result.text, { parse_mode: 'Markdown' });
+      this.telegramReplyService.sendFormattedReply(ctx, result.text);
     } catch (error) {
       await this.handleError(ctx, error as Error);
     }

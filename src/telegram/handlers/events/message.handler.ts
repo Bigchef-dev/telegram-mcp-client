@@ -3,11 +3,13 @@ import { Context } from 'telegraf';
 import { BaseEventHandler } from './base-event.handler';
 import { EventType } from './event.interface';
 import { MessageProcessingWorkflow } from '@/mastra/workflows/message-processing.workflow';
+import { TelegramReplyService } from '../../services/telegram-reply.service';
 
 @Injectable()
 export class TextEventHandler extends BaseEventHandler {
   constructor(
     private readonly messageProcessingWorkflow: MessageProcessingWorkflow,
+    private readonly telegramReplyService: TelegramReplyService,
   ) {
     super();
   }
@@ -32,13 +34,8 @@ export class TextEventHandler extends BaseEventHandler {
 
       this.logger.log(`Mastra processed message: ${result}`);
       
-      // Envoi de la réponse
-      await ctx.reply(result.text, { parse_mode: 'Markdown' });
-      
-      // Action supplémentaire si nécessaire
-      if (result.action === 'typing') {
-        await ctx.sendChatAction('typing');
-      }
+      // Envoi de la réponse formatée via le service dédié
+      await this.telegramReplyService.sendFormattedReply(ctx, result.text);
     } catch (error) {
       await this.handleError(ctx, error as Error);
     }

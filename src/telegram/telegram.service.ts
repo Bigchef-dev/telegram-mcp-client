@@ -13,7 +13,8 @@ import {
   VoiceEventHandler,
   UnsupportedMediaEventHandler,
   ErrorEventHandler,
-  EventType
+  EventType,
+  PollEventHandler
 } from './handlers';
 import { telegramConfig } from '@/config';
 
@@ -32,6 +33,7 @@ export class TelegramService {
     private readonly memoryStatsHandler: MemoryStatsCommandHandler,
     private readonly textHandler: TextEventHandler,
     private readonly voiceHandler: VoiceEventHandler,
+    private readonly pollHandler: PollEventHandler,
     private readonly unsupportedMediaHandler: UnsupportedMediaEventHandler,
     private readonly errorHandler: ErrorEventHandler
   ) {
@@ -177,7 +179,7 @@ export class TelegramService {
 
       // Sondages
       this.bot.on(message('poll'), async (ctx) => {
-        await unsupportedHandler.handle(ctx);
+        await this.pollHandler.handle(ctx);
       });
 
       // Dés

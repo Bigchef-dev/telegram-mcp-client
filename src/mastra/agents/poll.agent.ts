@@ -5,6 +5,7 @@ import { UserMemoryService } from '../../memory/user-memory.service';
 import { POLL_PROMPT } from './poll.prompt';
 import { Injectable } from '@nestjs/common';
 import { MCPTelegramClient } from '../mcp.client';
+import { Memory } from '@mastra/memory';
 
 /**
  * Poll Agent avec mémoire isolée par utilisateur
@@ -12,16 +13,22 @@ import { MCPTelegramClient } from '../mcp.client';
 @Injectable()
 export class PollAgent  {
   private static MODEL_NAME = 'mistral-small-latest';
-  private readonly agent: Agent;
+  private agent: Agent;
+  private memory: Memory;
 
-  constructor(private userMemoryService: UserMemoryService, private readonly mcpClient: MCPTelegramClient) {
+  constructor(private userMemoryService: UserMemoryService, private mcpClient: MCPTelegramClient) {
+    this.createAgent();
+  }
+
+  async createAgent() {
+    this.memory = this.userMemoryService.getMemory('poll-telegram-assistant');
     this.agent = new Agent({
       name: 'poll-telegram-assistant',
       description: 'Assistant Telegram pour sondages et enquêtes avec mémoire isolée par utilisateur',
       instructions: POLL_PROMPT,
-      memory: this.userMemoryService.getMemory('poll-telegram-assistant'),
+      memory: this.memory,
       model: mistral(PollAgent.MODEL_NAME),
-      tools: {},
+      tools: await this.mcpClient.getTools(),
     });
   }
 
@@ -55,6 +62,8 @@ export class PollAgent  {
   async processUserMessage(input: z.infer<typeof this.inputSchema>) : Promise<any> {  
     const { message, userId, chatId } = input;
     
+    try {
+      
     const result = await this.agent.generateVNext(
       [
         { role: 'system', content: `chat_id: ${chatId}` },
@@ -66,11 +75,13 @@ export class PollAgent  {
           thread: `${chatId}`, // ID unique du thread de conversation
           resource: userId, // Ressource utilisateur pour la mémoire de travail
         },
-        toolsets: await this.mcpClient.getToolsets(),
-        // Configuration pour éviter les conflits de messages
         maxSteps: 5, // Limite les interactions outils pour éviter les séquences complexes
       }
     );
     return result;
+    } catch (error) {
+      await this.memory.deleteThread(chatId);
+      throw error;
+    }
   }
 }
