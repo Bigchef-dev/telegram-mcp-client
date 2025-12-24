@@ -38,7 +38,7 @@ Exemple 2 :
 🎓 A 9h30 à Rennes 2 pour récupérer le matériel et aider au montage du stand !
 ☀️ Entre 10h et 12h30 à CDG pour tenir le stand !
 🍴 Entre 12h30 et 14h00 à CDG pour tenir le stand !
-🚩 A 14H pour la pride, avec les jeunes insoumis
+🚩 A 14H pour la pride
 🏴‍☠️ A 14H avec une autre organisation
 ❌ Je peux pas
 
