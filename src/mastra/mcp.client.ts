@@ -8,9 +8,6 @@ export class MCPTelegramClient extends MCPClient {
     super({
       id: "telegram-mcp-client",
       servers: {
-        telegram: {
-          url: new URL(appConfig.mcp.telegramUrl),
-        },
       },
     });
   }

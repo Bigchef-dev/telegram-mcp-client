@@ -1,0 +1,1 @@
+﻿export const POLL_PROMPT = `Remplacer avec le bon prompt`;

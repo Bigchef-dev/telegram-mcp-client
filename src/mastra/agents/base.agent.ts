@@ -2,7 +2,7 @@ import { Agent, GenerateTextResult, MastraMessageV2 } from '@mastra/core';
 import { mistral } from '@ai-sdk/mistral';
 import { z } from 'zod';
 import { UserMemoryService } from '../../memory/user-memory.service';
-import { POLL_PROMPT } from './poll.prompt';
+import { POLL_PROMPT } from './base.prompt';
 import { MCPTelegramClient } from '../mcp.client';
 import { Memory } from '@mastra/memory';
 import { Injectable } from '@nestjs/common';

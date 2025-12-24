@@ -10,7 +10,6 @@ export const appConfig = {
   
 
   mcp: {
-    telegramUrl: process.env.MCP_SERVER_URL,
   },
   // Configuration du logging
   logging: {
