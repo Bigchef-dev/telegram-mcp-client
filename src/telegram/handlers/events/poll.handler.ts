@@ -4,7 +4,7 @@ import { BaseEventHandler } from './base-event.handler';
 import { EventType } from './event.interface';
 import { MessageProcessingWorkflow } from '@/mastra/workflows/message-processing.workflow';
 import { TelegramReplyService } from '../../services/telegram-reply.service';
-import { Poll } from 'telegraf/typings/core/types/typegram';
+import { Poll, PollOption } from 'telegraf/typings/core/types/typegram';
 
 @Injectable()
 export class PollEventHandler extends BaseEventHandler {
@@ -35,7 +35,7 @@ export class PollEventHandler extends BaseEventHandler {
     pollText += `*Question :* ${question}\n\n`;
     pollText += `*Options :*\n`;
 
-    options.forEach((option: any, index: number) => {
+    options.forEach((option: PollOption, index: number) => {
       pollText += `${index + 1}. ${option.text}\n`;
     });
 
@@ -75,21 +75,10 @@ export class PollEventHandler extends BaseEventHandler {
       // Traitement par le workflow MCP avec le texte du poll
       const message = `L'utilisateur a partagé ce sondage : ${pollText}`;
       
-      const result = await this.messageProcessingWorkflow.execute({
-        message,
-        userId,
-        chatId,
-      });
-
+      const result = await this.messageProcessingWorkflow.addMessage(message, chatId, userId);
+      await ctx.react('❤‍🔥');
+      
       this.logger.log(`Mastra processed poll message: ${result}`);
-      
-      // Envoi de la réponse formatée via le service dédié
-      await this.telegramReplyService.sendFormattedReply(ctx, result.text);
-      
-      // Action supplémentaire si nécessaire
-      if (result.action === 'typing') {
-        await ctx.sendChatAction('typing');
-      }
     } catch (error) {
       await this.handleError(ctx, error as Error);
     }

@@ -10,6 +10,7 @@ import {
   PingCommandHandler,
   MemoryCommandHandler,
   MemoryStatsCommandHandler,
+  ClearCommandHandler,
   TextEventHandler,
   VoiceEventHandler,
   PollEventHandler,
@@ -18,12 +19,14 @@ import {
 } from './handlers';
 import { VoiceProcessingWorkflow } from '@/mastra/workflows/voice-processing.workflow';
 import { MastraModule } from '@/mastra/mastra.module';
+import { LLMTelegramService } from './services/llm.telegram.service';
 
 @Module({
   imports: [MemoryModule, MastraModule],
   providers: [
     TelegramService,
     TelegramReplyService,
+    LLMTelegramService,
     CommandRegistry,
     EventRegistry,
     StartCommandHandler,
@@ -31,6 +34,7 @@ import { MastraModule } from '@/mastra/mastra.module';
     PingCommandHandler,
     MemoryCommandHandler,
     MemoryStatsCommandHandler,
+    ClearCommandHandler,
     TextEventHandler,
     VoiceEventHandler,
     PollEventHandler,

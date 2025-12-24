@@ -18,7 +18,7 @@ export class VoiceProcessingWorkflow {
         voiceFileId: string;
         userId: string;
         chatId: string;
-    }) {
+    }) : ReturnType<typeof this.messageProcessingWorkflow.execute> {
         const { audio, mediaType } = input;
         
         // Convert audio data to Blob if it's Uint8Array

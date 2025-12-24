@@ -3,13 +3,13 @@ import { Context } from 'telegraf';
 import { BaseEventHandler } from './base-event.handler';
 import { EventType } from './event.interface';
 import { MessageProcessingWorkflow } from '@/mastra/workflows/message-processing.workflow';
-import { TelegramReplyService } from '../../services/telegram-reply.service';
+import { LLMTelegramService } from '@/telegram/services/llm.telegram.service';
 
 @Injectable()
 export class TextEventHandler extends BaseEventHandler {
   constructor(
+    private readonly llmTelegramService: LLMTelegramService,
     private readonly messageProcessingWorkflow: MessageProcessingWorkflow,
-    private readonly telegramReplyService: TelegramReplyService,
   ) {
     super();
   }
@@ -20,22 +20,23 @@ export class TextEventHandler extends BaseEventHandler {
 
   async handle(ctx: Context, error?: Error): Promise<void> {
     try {
-      const message = (ctx.message as any)?.text || '';
+      if(!('text' in ctx.message!)) {
+        throw new Error('Message text missing');
+      }
+      const message = (ctx.message)?.text || '';
       const userId = ctx.from?.id?.toString() || '';
       const chatId = ctx.chat?.id?.toString() || '';
+      
+      if('forward_from' in ctx.message) {
+        await this.messageProcessingWorkflow.addMessage(`L'utilisateur a transféré ce message : ${message}`, chatId, userId);
+        await ctx.react('❤‍🔥');
+      }
+
 
       this.logger.log(`Received text message from user ${userId}: ${message}`);
-
-      const result = await this.messageProcessingWorkflow.execute({
-        message,
-        userId,
-        chatId,
-      });
+      const result = await this.llmTelegramService.process(ctx, message, userId, chatId);
 
       this.logger.log(`Mastra processed message: ${result}`);
-      
-      // Envoi de la réponse formatée via le service dédié
-      await this.telegramReplyService.sendFormattedReply(ctx, result.text);
     } catch (error) {
       await this.handleError(ctx, error as Error);
     }

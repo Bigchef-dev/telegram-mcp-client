@@ -19,7 +19,7 @@ export class TelegramReplyService {
   /**
    * Fonction globale pour envoyer une réponse formatée après traitement par l'IA
    */
-  async sendFormattedReply(ctx: Context, text: string): Promise<void> {
+  public async sendFormattedReply(ctx: Context, text: string): Promise<void> {
     const formattedText = this.transformMarkdown(text);
     await ctx.reply(formattedText, { parse_mode: 'Markdown' });
   }
